@@ -28,7 +28,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <p>Ahora se modifico el deploy</p>
+      <p>Ahora se modifico el deploy otra vez</p>
     </>
   )
 }
