@@ -81,6 +81,12 @@ const Login = () => {
               required
             />
           </div>
+          {/* Mensaje de Error */}
+          {error && (
+            <div className="mb-4 text-red-500 text-sm font-semibold text-center">
+              {error}
+            </div>
+          )}
           {/* Botón de Iniciar Sesión */}
           <button
             type="submit"
