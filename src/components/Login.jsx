@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.png';
 
 const Login = () => {
   return (
@@ -7,8 +8,8 @@ const Login = () => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
-            src=".././src/assets/logo.png"
-            alt="Logo"
+            src={logo}
+            alt="Logoooo"
             className="w-20 h-20"
           />
         </div>
