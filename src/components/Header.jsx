@@ -18,7 +18,7 @@ const Header = () => {
       {/* Logo y nombre del proyecto */}
       <div className="flex items-center">
         <img src={logo} alt="Logo" className="w-12 h-12 mr-3" />
-        <h1 className="text-xl font-bold">Sthinking Board</h1>
+        <h1 className="text-xl font-bold">SthinkingBoard</h1>
       </div>
 
       {/* Botones con iconos */}

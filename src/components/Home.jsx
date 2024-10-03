@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import Button from './Buttons'
 import { FaTrello, FaCalendarAlt, FaPlus } from "react-icons/fa"; // Importamos los íconos de react-icons
 
 const Home = () => {
@@ -18,19 +19,19 @@ const Home = () => {
       <Header />
       <div className="buttons__container flex justify-between mt-6 px-4">
         {/* Div para los botones */}
-        <div className="flex space-x-4">
-          {/* Botón Tablero */}
-          <button className="flex flex-col items-center p-4 bg-gray-200 rounded-lg hover:bg-gray-300">
-            <FaTrello className="text-3xl mb-2" />
-            <span>Tablero</span>
-          </button>
-
-          {/* Botón Calendario */}
-          <button className="flex flex-col items-center p-4 bg-gray-200 rounded-lg hover:bg-gray-300">
-            <FaCalendarAlt className="text-3xl mb-2" />
-            <span>Calendario</span>
-          </button>
-        </div>
+         <div className="flex space-x-4">
+        <Button
+          label="Tablero"
+          onClick={() => console.log("Ir a Tablero")}
+          styleType="default"
+        />
+        <Button
+          label="Calendario"
+          onClick={() => console.log("Ir a Calendario")}
+          styleType="default"
+          disabled={true}
+        />
+      </div>
 
         {/* Div para el botón de añadir columna */}
         <div className="flex justify-end">
