@@ -1,14 +1,27 @@
 import express from "express";
-import morgan from "morgan";
-
-import taskRoutes from "./routes/task.routes.js";
+import cors from "cors"
+import path from "path";
 
 const app = express();
+const port = process.env.PORT || 8080;
 
-app.use(morgan("dev"));
+import loginRoute from './routes/login.routes'
+import registerRoute from './routes/register.routes'
 
-app.use(taskRoutes);
+app.use('/login', loginRoute);
+app.use('/register', registerRoute);
 
-app.listen(3000, () => {
-    console.log("Server on port 3000");
+// Ruta principal
+app.get('/', (req, res) => {
+  res.send("Bienvenido al Backend de la aplicación.");
+});
+
+// Manejar errores de rutas inexistentes
+app.use((req, res) => {
+  res.status(404).send("La página que buscas no existe.");
+});
+
+// Iniciar el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });

@@ -1,97 +1,125 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../assets/logo.png';
 
 const Register = () => {
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      setMessage('Las contraseñas no coinciden.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullname, email, password, confirmPassword }),
+      });
+
+      const data = await response.json();
+      setMessage(data.message);
+    } catch (error) {
+      console.error('Error en el registro:', error);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         {/* Logo */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-4">
           <img
             src={logo}
             alt="Logo"
-            className="w-20 h-20"
+            className="w-12 h-12"
           />
         </div>
-
         {/* Título */}
-        <h2 className="text-2xl font-bold text-center mb-2">Crear cuenta</h2>
-        <p className="text-sm text-gray-600 text-center mb-8">
+        <h1 className="text-2xl font-bold text-center mb-2">Crear cuenta</h1>
+        <p className="text-center text-gray-500 mb-6">
           Regístrate para usar Sthinking Board
         </p>
-
         {/* Formulario */}
-        <form>
-          {/* Campo de Nombre completo */}
+        <form onSubmit={(e) => e.preventDefault()}>
+          {/* Campo de Nombre */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="fullname">
+            <label className="block text-gray-700 font-semibold mb-1">
               Nombre completo
             </label>
             <input
-              id="fullname"
               type="text"
+              className="w-full p-2 border rounded"
               placeholder="Juan Pérez"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
+              required
             />
           </div>
-
-          {/* Campo de correo electrónico */}
+          {/* Campo de Correo */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
+            <label className="block text-gray-700 font-semibold mb-1">
               Correo electrónico
             </label>
             <input
-              id="email"
               type="email"
+              className="w-full p-2 border rounded"
               placeholder="tu@ejemplo.com"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
-
-          {/* Campo de contraseña */}
+          {/* Campo de Contraseña */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="password">
+            <label className="block text-gray-700 font-semibold mb-1">
               Contraseña
             </label>
             <input
-              id="password"
               type="password"
-              placeholder="••••••••"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              className="w-full p-2 border rounded"
+              placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-
-          {/* Campo de confirmación de contraseña */}
+          {/* Campo de Confirmar Contraseña */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="confirm-password">
+            <label className="block text-gray-700 font-semibold mb-1">
               Confirmar contraseña
             </label>
             <input
-              id="confirm-password"
               type="password"
-              placeholder="••••••••"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              className="w-full p-2 border rounded"
+              placeholder="********"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
             />
           </div>
-
-          {/* Botón de registro */}
+          {/* Botón de Registro */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-200"
+            className="w-full p-2 bg-black text-white font-semibold rounded hover:bg-gray-800"
+            onClick={handleRegister}
           >
             Registrarse
           </button>
+          {/* Mensaje de Error o Éxito */}
+          {message && <p className="mt-4 text-center text-red-500">{message}</p>}
         </form>
-
-        {/* Link de inicio de sesión */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            ¿Ya tienes una cuenta?{' '}
-            <a href="#" className="text-blue-500 hover:underline">
-              Inicia sesión
-            </a>
-          </p>
-        </div>
+        {/* Enlace de Inicio de Sesión */}
+        <p className="mt-4 text-center">
+          ¿Ya tienes una cuenta?{' '}
+          <a href="/login" className="text-blue-500 hover:text-blue-700">
+            Inicia sesión
+          </a>
+        </p>
       </div>
     </div>
   );
