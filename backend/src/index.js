@@ -1,32 +1,23 @@
-import express from "express";
-import cors from "cors";
-import path from "path";
+import express from 'express';
+import cors from 'cors';
+import db from './db.js'; // Importar la base de datos
+import routes from './routes/index.js'; // Importar todas las rutas agrupadas
 
 const app = express();
-const port = 5000;
+const PORT = 5000;
 
-// Middleware
+// Probar la conexión a la base de datos
+db.connect()
+  .then(() => console.log('Conexión exitosa a la base de datos'))
+  .catch((err) => console.error('Error al conectar a la base de datos:', err));
+
+// Middlewares
 app.use(cors());
-app.use(express.json()); // Para parsear el cuerpo de las solicitudes en formato JSON
-
-import loginRoute from './routes/login.routes.js'; 
-import registerRoute from './routes/register.routes.js'; 
+app.use(express.json());
 
 // Rutas
-app.use('/login', loginRoute);
-app.use('/register', registerRoute);
+app.use(routes); // Usar todas las rutas importadas
 
-// Ruta principal
-app.get('/', (req, res) => {
-  res.send("Bienvenido al Backend de la aplicación.");
-});
-
-// Manejar errores de rutas inexistentes
-app.use((req, res) => {
-  res.status(404).send("La página que buscas no existe.");
-});
-
-// Iniciar el servidor
-app.listen(port, () => { // Cambiado de PORT a port
-  console.log(`Servidor ejecutándose en http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
