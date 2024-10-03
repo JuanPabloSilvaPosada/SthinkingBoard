@@ -1,30 +1,48 @@
-import React, { useState } from 'react';
-import logo from '../assets/logo.png';
+import React, { useState } from "react";
+import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [fullname, setFullname] = useState(""); // Cambiar el estado a fullname
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setError(null);
+
+    // Verificar que las contraseñas coincidan
     if (password !== confirmPassword) {
-      setMessage('Las contraseñas no coinciden.');
+      setError("Las contraseñas no coinciden");
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullname, email, password, confirmPassword }),
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: fullname, // El nombre completo se envía como username
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword,
+        }),
       });
 
       const data = await response.json();
-      setMessage(data.message);
+
+      if (response.ok) {
+        navigate("/login"); // Redirige a la página de inicio de sesión
+      } else {
+        setError(data.message || "Error al registrar el usuario");
+      }
     } catch (error) {
-      console.error('Error en el registro:', error);
+      setError("Error en la conexión");
     }
   };
 
@@ -33,11 +51,7 @@ const Register = () => {
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         {/* Logo */}
         <div className="flex justify-center mb-4">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-12 h-12"
-          />
+          <img src={logo} alt="Logo" className="w-12 h-12" />
         </div>
         {/* Título */}
         <h1 className="text-2xl font-bold text-center mb-2">Crear cuenta</h1>
@@ -111,11 +125,13 @@ const Register = () => {
             Registrarse
           </button>
           {/* Mensaje de Error o Éxito */}
-          {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+          {message && (
+            <p className="mt-4 text-center text-red-500">{message}</p>
+          )}
         </form>
         {/* Enlace de Inicio de Sesión */}
         <p className="mt-4 text-center">
-          ¿Ya tienes una cuenta?{' '}
+          ¿Ya tienes una cuenta?{" "}
           <a href="/login" className="text-blue-500 hover:text-blue-700">
             Inicia sesión
           </a>
