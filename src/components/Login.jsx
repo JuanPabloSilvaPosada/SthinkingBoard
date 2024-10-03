@@ -1,41 +1,37 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { useAuth } from "../AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [identifier, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Stop default functionality of the form
+
     setError(null);
-    setMessage("");
+
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: email,
+          identifier: identifier,
           password: password,
         }),
       });
+      const data = await response.json();
 
       if (response.ok) {
-        
-        login();
-        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('user', JSON.stringify(data.user))
         navigate('/home');
       } else {
-        const data = await response.json();
-        setError(data.message || 'Error al iniciar sesión');
+        setError(data.message);
       }
     } catch (error) {
-      setError('Error en la conexión');
+      setErrorMessage('Error en el servidor, inténtalo más tarde.');
     }
   };
 
@@ -46,28 +42,28 @@ const Login = () => {
         <div className="flex justify-center mb-4">
           <img src={logo} alt="Logo" className="w-12 h-12" />
         </div>
-        {/* Título */}
+        {/* Title */}
         <h1 className="text-2xl font-bold text-center mb-2">Iniciar sesión</h1>
         <p className="text-center text-gray-500 mb-6">
           Ingresa a tu cuenta de Sthinking Board
         </p>
-        {/* Formulario */}
+        {/* Fomr */}
         <form onSubmit={(e) => e.preventDefault()}>
-          {/* Campo de Correo */}
+          {/* Email or username */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
-              Correo electrónico
+              Correo electrónico o nombre
             </label>
             <input
-              type="email"
+              type="email o nombre"
               className="w-full p-2 border rounded"
               placeholder="tu@ejemplo.com"
-              value={email}
+              value={identifier}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          {/* Campo de Contraseña */}
+          {/* Password */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
               Contraseña
@@ -95,14 +91,10 @@ const Login = () => {
           >
             Iniciar sesión
           </button>
-          {/* Mensaje de Error o Éxito */}
-          {message && (
-            <p className="mt-4 text-center text-red-500">{message}</p>
-          )}
         </form>
         {/* Enlace de Registro */}
         <p className="mt-4 text-center">
-          ¿No tienes una cuenta?{" "}
+          ¿No tienes una cuenta?
           <a href="/register" className="text-blue-500 hover:text-blue-700">
             Regístrate
           </a>
