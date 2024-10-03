@@ -7,7 +7,7 @@ const Register = () => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
-            src="./assets/logo.png"
+            src=".././src/assets/logo.png"
             alt="Logo"
             className="w-20 h-20"
           />
