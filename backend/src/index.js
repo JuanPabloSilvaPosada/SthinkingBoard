@@ -1,13 +1,18 @@
 import express from "express";
-import cors from "cors"
+import cors from "cors";
 import path from "path";
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = 5000;
 
-import loginRoute from './routes/login.routes'
-import registerRoute from './routes/register.routes'
+// Middleware
+app.use(cors());
+app.use(express.json()); // Para parsear el cuerpo de las solicitudes en formato JSON
 
+import loginRoute from './routes/login.routes.js'; 
+import registerRoute from './routes/register.routes.js'; 
+
+// Rutas
 app.use('/login', loginRoute);
 app.use('/register', registerRoute);
 
@@ -22,6 +27,6 @@ app.use((req, res) => {
 });
 
 // Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+app.listen(port, () => { // Cambiado de PORT a port
+  console.log(`Servidor ejecutándose en http://localhost:${port}`);
 });

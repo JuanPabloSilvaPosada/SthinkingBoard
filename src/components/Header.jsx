@@ -1,8 +1,18 @@
 import React from 'react';
-import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'; // Importa los iconos
-import logo from '../assets/logo.png'; // Asegúrate de tener el logo en la carpeta assets
+import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import logo from '../assets/logo.png';
+import { useAuth } from '../AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <header className="flex justify-between items-center bg-white p-4 shadow-md">
       {/* Logo y nombre del proyecto */}
@@ -13,7 +23,10 @@ const Header = () => {
 
       {/* Botones con iconos */}
       <div className="flex items-center space-x-4">
-        <button className="flex items-center text-gray-600 hover:text-red-500 focus:outline-none">
+        <button
+          className="flex items-center text-gray-600 hover:text-red-500 focus:outline-none"
+          onClick={handleLogout}
+        >
           <FaSignOutAlt className="text-2xl mr-2" />
           <span>Cerrar sesión</span>
         </button>

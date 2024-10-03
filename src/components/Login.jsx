@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import logo from '../assets/logo.png';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+import { useAuth } from "../AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setMessage("");
     try {
       const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
@@ -14,10 +22,17 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-      setMessage(data.message);
+      if (response.ok) {
+        
+        login();
+        localStorage.setItem('isAuthenticated', 'true');
+        navigate('/home');
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Error al iniciar sesión');
+      }
     } catch (error) {
-      console.error('Error en la solicitud de inicio de sesión:', error);
+      setError('Error en la conexión');
     }
   };
 
@@ -26,11 +41,7 @@ const Login = () => {
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         {/* Logo */}
         <div className="flex justify-center mb-4">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-12 h-12"
-          />
+          <img src={logo} alt="Logo" className="w-12 h-12" />
         </div>
         {/* Título */}
         <h1 className="text-2xl font-bold text-center mb-2">Iniciar sesión</h1>
@@ -67,12 +78,6 @@ const Login = () => {
               required
             />
           </div>
-          {/* Enlace de Olvidar Contraseña */}
-          <div className="mb-4 text-right">
-            <a href="#" className="text-gray-500 hover:text-gray-800">
-              ¿Olvidaste tu contraseña?
-            </a>
-          </div>
           {/* Botón de Iniciar Sesión */}
           <button
             type="submit"
@@ -82,11 +87,13 @@ const Login = () => {
             Iniciar sesión
           </button>
           {/* Mensaje de Error o Éxito */}
-          {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+          {message && (
+            <p className="mt-4 text-center text-red-500">{message}</p>
+          )}
         </form>
         {/* Enlace de Registro */}
         <p className="mt-4 text-center">
-          ¿No tienes una cuenta?{' '}
+          ¿No tienes una cuenta?{" "}
           <a href="/register" className="text-blue-500 hover:text-blue-700">
             Regístrate
           </a>

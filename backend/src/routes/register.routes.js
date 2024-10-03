@@ -15,4 +15,4 @@ router.post('/', (req, res) => {
   return res.status(201).json({ message: "Usuario registrado exitosamente." });
 });
 
-module.exports = router;
+export default router;
