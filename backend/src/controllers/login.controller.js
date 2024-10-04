@@ -4,6 +4,10 @@ import bcrypt from "bcrypt";
 export const loginUser = async (req, res) => {
   const { identifier, password } = req.body;
 
+  if (!identifier || !password) {
+    return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+  }
+  
   try {
     const result = await db.query(
       "SELECT * FROM users WHERE username = $1 OR email = $1",

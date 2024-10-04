@@ -3,34 +3,37 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [fullname, setFullname] = useState(""); // Cambiar el estado a fullname
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [verifyPassword, setVerifyPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setError(null);
+    e.preventDefault(); // Stop default functionality of the form
 
-    // Verificar que las contraseñas coincidan
-    if (password !== confirmPassword) {
+    // Validate if all fields has information
+    if (!username || !email || !password || !verifyPassword) {
+      setError("Todos los campos son obligatorios");
+      return;
+    }
+
+    // Validate password
+    if (password !== verifyPassword) {
       setError("Las contraseñas no coinciden");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/register", {
+      const response = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: fullname, // El nombre completo se envía como username
-          email: email,
-          password: password,
-          confirmPassword: confirmPassword,
+          username,
+          email,
+          password,
+          verifyPassword,
         }),
       });
 
@@ -39,10 +42,10 @@ const Register = () => {
       if (response.ok) {
         navigate("/login"); // Redirige a la página de inicio de sesión
       } else {
-        setError(data.message || "Error al registrar el usuario");
+        setError(data.message);
       }
     } catch (error) {
-      setError("Error en la conexión");
+      setError("Error en la conexión, intentalo mas tarde.");
     }
   };
 
@@ -53,14 +56,14 @@ const Register = () => {
         <div className="flex justify-center mb-4">
           <img src={logo} alt="Logo" className="w-12 h-12" />
         </div>
-        {/* Título */}
+        {/* Title */}
         <h1 className="text-2xl font-bold text-center mb-2">Crear cuenta</h1>
         <p className="text-center text-gray-500 mb-6">
           Regístrate para usar Sthinking Board
         </p>
-        {/* Formulario */}
+        {/* Form */}
         <form onSubmit={(e) => e.preventDefault()}>
-          {/* Campo de Nombre */}
+          {/* Username */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
               Nombre completo
@@ -69,12 +72,12 @@ const Register = () => {
               type="text"
               className="w-full p-2 border rounded"
               placeholder="Ingresa tu nombre"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
-          {/* Campo de Correo */}
+          {/* Email */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
               Correo electrónico
@@ -88,7 +91,7 @@ const Register = () => {
               required
             />
           </div>
-          {/* Campo de Contraseña */}
+          {/* Password */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
               Contraseña
@@ -102,7 +105,7 @@ const Register = () => {
               required
             />
           </div>
-          {/* Campo de Confirmar Contraseña */}
+          {/* Verify Password */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">
               Confirmar contraseña
@@ -111,8 +114,8 @@ const Register = () => {
               type="password"
               className="w-full p-2 border rounded"
               placeholder="********"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={verifyPassword}
+              onChange={(e) => setVerifyPassword(e.target.value)}
               required
             />
           </div>
@@ -130,10 +133,6 @@ const Register = () => {
           >
             Registrarse
           </button>
-          {/* Mensaje de Error o Éxito */}
-          {message && (
-            <p className="mt-4 text-center text-red-500">{message}</p>
-          )}
         </form>
         {/* Enlace de Inicio de Sesión */}
         <p className="mt-4 text-center">

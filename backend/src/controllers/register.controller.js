@@ -4,9 +4,14 @@ import bycrpt from "bcrypt";
 export const registerUser = async (req, res) => {
   const { username, email, password, verifyPassword } = req.body;
 
-  if (password !== verifyPassword)
-    res.status(400).json({ message: "Las contraseñas no coinciden" });
-
+  if (!username || !email || !password || !verifyPassword){
+    return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+  } 
+  
+  if (password !== verifyPassword) {
+    return res.status(400).json({ message: "Las contraseñas no coinciden" });
+  }
+  
   try {
     // Hash password
     const hashedPassword = await bycrpt.hash(password, 10);

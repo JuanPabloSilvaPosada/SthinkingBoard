@@ -11,7 +11,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // Stop default functionality of the form
 
-    setError(null);
+    // Validate if all fields has information
+    if (!identifier || !password) {
+      setError("Todos los campos son obligatorios");
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:5000/auth/login', {
@@ -31,7 +35,7 @@ const Login = () => {
         setError(data.message);
       }
     } catch (error) {
-      setErrorMessage('Error en el servidor, inténtalo más tarde.');
+      setError('Error en la conexión, inténtalo más tarde.');
     }
   };
 
@@ -94,7 +98,7 @@ const Login = () => {
         </form>
         {/* Enlace de Registro */}
         <p className="mt-4 text-center">
-          ¿No tienes una cuenta?
+          ¿No tienes una cuenta?{" "}
           <a href="/register" className="text-blue-500 hover:text-blue-700">
             Regístrate
           </a>
